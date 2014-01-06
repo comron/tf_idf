@@ -3,9 +3,9 @@
 require "rubygems" 
 require "bundler/setup" 
 require "bindata"
+require "./shared.rb"
 
 DATA_FILE = File.join(File.dirname(__FILE__), "movies.dat")
-STOP_WORDS = "a,able,about,across,after,all,almost,also,am,among,an,and,any,are,as,at,be,because,been,but,by,can,cannot,could,dear,did,do,does,either,else,ever,every,for,from,get,got,had,has,have,he,her,hers,him,his,how,however,i,if,in,into,is,it,its,just,least,let,like,likely,may,me,might,most,must,my,neither,no,nor,not,of,off,often,on,only,or,other,our,own,rather,said,say,says,she,should,since,so,some,than,that,the,their,them,then,there,these,they,this,tis,to,too,twas,us,wants,was,we,were,what,when,where,which,while,who,whom,why,will,with,would,yet,you,your".split(",").freeze
 
 class IndexVector
 
@@ -50,6 +50,8 @@ class Index
   attr_reader :term_frequency_matrix, :inverse_document_frequency, :document_index 
 
   SCALE = 1_000
+
+  include Shared
 
   def initialize( location = nil )
     @term_frequency_matrix = {}
@@ -186,26 +188,6 @@ class Index
 
 
   private
-  def to_terms( text )
-    terms = text.downcase.split(/[\s+\-:]/)
-    terms.reject! { |word| STOP_WORDS.include?(word) }
-   
-    terms.map! do |term|
-      term.gsub(/[^a-z0-9]/, '')
-    end
-
-    terms.reject! do |term|
-      term.length == 0 
-    end
-    
-    bigrams = []
-    terms.each_cons(2) do |bigram|
-      bigrams << bigram.join(" ")
-    end
-
-    terms += bigrams
-  end
-
   def term_frequency( text )
     terms = to_terms( text )
     results = Hash.new(0).tap do |vector|
