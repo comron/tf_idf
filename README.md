@@ -8,4 +8,4 @@ Install dependencies
  - bundle install --path ./vendor
 
 Run script
- - ruby index.rb
+ - ruby tf_idf.rb

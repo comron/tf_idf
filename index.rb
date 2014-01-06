@@ -5,7 +5,6 @@ require "bundler/setup"
 require "bindata"
 require "./shared.rb"
 
-DATA_FILE = File.join(File.dirname(__FILE__), "movies.dat")
 
 class IndexVector
 
@@ -213,28 +212,3 @@ class Index
 
 end
 
-if __FILE__ == $0
-  puts "Loading index..."
-
-  movie_lookup = File.readlines(DATA_FILE).inject({}) do |h,line|
-    data = line.split("|")
-    h.merge( data[0] => data )
-  end
-
-  index = Index.new(File.dirname(__FILE__))
-  #index.intitialize_from_csv( :file, DATA_FILE )
-  #index.write!( File.dirname(__FILE__))
-
-  puts "Ready for searches..."
-  while line = gets
-    results = index.search(line.strip)
-    if results.empty?
-      puts " ==> NO RESULTS"
-    else
-      puts results.map { |res| " ==> " + [movie_lookup[res[0]].map(&:strip)[1..3], res[1]].flatten.join(" - ") }.join("\n")
-    end
-    puts
-  end
-
-
-end

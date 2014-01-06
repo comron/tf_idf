@@ -46,7 +46,10 @@ class SearchFrontend
     {:ratio => 0, :longest => 0}.tap do |results|
       matched = 0
       current_run = 0
+      p text
+
       all_bigrams = bigrams(text)
+      p all_bigrams
       all_bigrams.each do |term|
         if @data.include?(term)
           current_run += 1
